@@ -19,6 +19,13 @@ contract RockPaperScissors {
     string firstGamerChoice;
     string secondGamerChoice;
 
+    // Events
+    event LogPlayerRegistration(address indexed gamer);
+    event LogGameResult(address indexed gamer, address indexed secondGamer, int indexed result);
+
+    // ToDo Set the bet logic
+    // ToDo At the moment the choice is clear and public so find a way to reduce cheat for the async flow
+
     constructor() {
         gameCases["rock"]["rock"] = 0;
         gameCases["rock"]["scissors"] = 1;
@@ -34,7 +41,7 @@ contract RockPaperScissors {
     /**
      * @dev registering players
     */
-    function register() public {
+    function register() public returns(bool success) {
         // no empty addresses
         require(msg.sender != address(0x00));
         // fail if same player
@@ -42,8 +49,52 @@ contract RockPaperScissors {
         // set players
         if(firstGamer == 0) {
             firstGamer = msg.sender;
+            emit LogPlayerRegistration(firstGamer);
+            success = true;
+            return success;
         } else {
             secondGamer = msg.sender;
+            emit LogPlayerRegistration(secondGamer);
+            success = true;
+            return success;
         }     
+    }
+
+    /**
+     * @dev play function
+    */
+    function play(string choice) public returns(int winner) {
+        // ToDo check choice is in choices
+
+        // set choices
+        if(msg.sender == firstGamer) {
+            firstGamerChoice = choice;
+        } else {
+            secondGamerChoice = choice;
+        }
+
+        // check empty choices
+        require(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0);
+        
+        // check winner
+        int winner = gameCases[firstGamerChoice][secondGamerChoice];
+
+        if (winner == 1)
+            // firstGamerChoice winner send the betted amount
+        else if (winner == 2) 
+            // secondGamerChoice winner send the betted amount
+        else {
+            // betted amount / 2
+        }
+
+        emit LogGameResult(firstGamer, secondGamer, winner);
+
+        // remove players and choices
+        firstGamerChoice = "";
+        secondGamerChoice = "";
+        firstGamer = 0;
+        secondGamer = 0;
+
+        return winner;
     }
 }
