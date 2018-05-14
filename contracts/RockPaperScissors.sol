@@ -12,7 +12,7 @@ contract RockPaperScissors {
      * rock vs scissors = rock => 1
      * rock vs paper = paper => 2
     */
-    mapping (string => mapping(string => uint)) gameCases;
+    mapping (string => mapping(string => int)) gameCases;
     
     address firstGamer;
     address secondGamer;
@@ -29,5 +29,21 @@ contract RockPaperScissors {
         gameCases["paper"]["rock"] = 1;
         gameCases["paper"]["scissors"] = 2;
         gameCases["paper"]["paper"] = 0;
+    }
+
+    /**
+     * @dev registering players
+    */
+    function register() public {
+        // no empty addresses
+        require(msg.sender != address(0x00));
+        // fail if same player
+        require(msg.sender != firstGamer || msg.sender != secondGamer);
+        // set players
+        if(firstGamer == 0) {
+            firstGamer = msg.sender;
+        } else {
+            secondGamer = msg.sender;
+        }     
     }
 }
