@@ -18,6 +18,8 @@ contract RockPaperScissors {
     address public secondGamer;
     string public firstGamerChoice;
     string public secondGamerChoice;
+    string public firstGamerHashChoice;
+    string public secondGamerHashChoice;
 
     // Events
     event LogPlayerRegistration(address indexed gamer);
