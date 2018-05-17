@@ -18,26 +18,30 @@ contract RockPaperScissors {
     address public secondGamer;
     string public firstGamerChoice;
     string public secondGamerChoice;
-    string public firstGamerHashChoice;
-    string public secondGamerHashChoice;
+    bytes32 public firstGamerHashChoice;
+    bytes32 public secondGamerHashChoice;
+    uint public timer;
+
+    // ToDo Set the bet logic
 
     // Events
     event LogPlayerRegistration(address indexed gamer);
+    event LogPlayerChoiceSet(address indexed gamer);
     event LogGameResult(address indexed gamer, address indexed secondGamer, int indexed result);
 
-    // ToDo Set the bet logic
-    // ToDo At the moment the choice is clear and public so find a way to reduce cheat for the async flow
-
+    // check that the gamer choice is one of the allowed choices
     modifier isValidChoice(string choice) {
         require(keccak256(choice) == "rocket" || keccak256(choice) == "paper" || keccak256(choice) == "scissors");
         _;
     }
 
+    // allow function execution only if the gamer is already registered
     modifier isRegistered {
         require(msg.sender == firstGamer || msg.sender == secondGamer);
         _;
     }
 
+    // allow function execution only if the gamer is not already registered
     modifier isNotRegistered {
         require(msg.sender != firstGamer || msg.sender != secondGamer);
         _;
@@ -56,12 +60,14 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev registering players
+     * @dev register function
+     * gamer registration function 
     */
     function register() 
         public
         isNotRegistered 
-        returns(bool success) {
+        returns(bool success) 
+    {
         // set players
         if(firstGamer == 0) {
             firstGamer = msg.sender;
@@ -77,43 +83,37 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev play function
+     * @dev setChoice function
+     * setting the hased gamers choices
     */
-    function play(string choice) 
+    function setChoice(string choice) 
         public
         isValidChoice(choice)
-        returns(int winner) 
+        isRegistered
+        returns(bool success)
     {
-        // ToDo check choice is in choices
-
         // set choices
         if(msg.sender == firstGamer) {
-            firstGamerChoice = choice;
+            emit LogPlayerChoiceSet(firstGamer);
+            firstGamerHashChoice = keccak256(choice);
         } else {
-            secondGamerChoice = choice;
+            emit LogPlayerChoiceSet(secondGamer);
+            secondGamerHashChoice = keccak256(choice);
         }
+        success = true;
+        return success;
+    }
 
-        // check empty choices
-        require(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0);
+    /**
+     * @dev showChoice function
+     * proof of gamer move
+    */
+    function showChoice(string choice)
+        public
+        isValidChoice(choice)
+        isRegistered
+        returns(bool proved)
+    {
         
-        // check winner
-        winner = gameCases[firstGamerChoice][secondGamerChoice];
-
-        if (winner == 1)
-            // firstGamerChoice winner send the betted amount
-        if (winner == 2) 
-            // secondGamerChoice winner send the betted amount
-        // else
-            // betted amount / 2
-
-        emit LogGameResult(firstGamer, secondGamer, winner);
-
-        // remove players and choices
-        firstGamerChoice = "";
-        secondGamerChoice = "";
-        firstGamer = 0;
-        secondGamer = 0;
-
-        return winner;
     }
 }
