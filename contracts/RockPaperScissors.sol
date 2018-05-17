@@ -38,6 +38,11 @@ contract RockPaperScissors {
         _;
     }
 
+    modifier isNotRegistered {
+        require(msg.sender != firstGamer || msg.sender != secondGamer);
+        _;
+    }
+
     constructor() public {
         gameCases["rock"]["rock"] = 0;
         gameCases["rock"]["scissors"] = 1;
@@ -53,9 +58,10 @@ contract RockPaperScissors {
     /**
      * @dev registering players
     */
-    function register() public returns(bool success) {
-        // fail if same player
-        require(msg.sender != firstGamer || msg.sender != secondGamer);
+    function register() 
+        public
+        isNotRegistered 
+        returns(bool success) {
         // set players
         if(firstGamer == 0) {
             firstGamer = msg.sender;
