@@ -3,7 +3,7 @@ const RPS = artifacts.require('./RockPaperScissors.sol')
 contract('RockPaperScissors', (accounts)=> {
     let contract
 
-    const owner = accounts[0]
+    const thirdy = accounts[0]
     const firstGamer = accounts[1]; secondGamer = accounts[2]
     
     
@@ -13,7 +13,7 @@ contract('RockPaperScissors', (accounts)=> {
         return ev
     }
 
-    console.log(`Gamer1: ${firstGamer} \nGamer2: ${secondGamer} \nContract owner: ${owner}`)
+    console.log(`Gamer1: ${firstGamer} \nGamer2: ${secondGamer} \nGeneric address: ${thirdy}`)
 
     beforeEach(async() => {
         contract = await RPS.new()
