@@ -13,11 +13,11 @@ contract RockPaperScissors {
      * rock vs paper = paper => 2
     */
     mapping (string => mapping(string => int)) gameCases;
-    
-    address firstGamer;
-    address secondGamer;
-    string firstGamerChoice;
-    string secondGamerChoice;
+
+    address public firstGamer;
+    address public secondGamer;
+    string public firstGamerChoice;
+    string public secondGamerChoice;
 
     // Events
     event LogPlayerRegistration(address indexed gamer);
@@ -26,7 +26,7 @@ contract RockPaperScissors {
     // ToDo Set the bet logic
     // ToDo At the moment the choice is clear and public so find a way to reduce cheat for the async flow
 
-    constructor() {
+    constructor() public {
         gameCases["rock"]["rock"] = 0;
         gameCases["rock"]["scissors"] = 1;
         gameCases["rock"]["paper"] = 2;
@@ -42,8 +42,6 @@ contract RockPaperScissors {
      * @dev registering players
     */
     function register() public returns(bool success) {
-        // no empty addresses
-        require(msg.sender != address(0x00));
         // fail if same player
         require(msg.sender != firstGamer || msg.sender != secondGamer);
         // set players
@@ -77,15 +75,14 @@ contract RockPaperScissors {
         require(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0);
         
         // check winner
-        int winner = gameCases[firstGamerChoice][secondGamerChoice];
+        winner = gameCases[firstGamerChoice][secondGamerChoice];
 
         if (winner == 1)
             // firstGamerChoice winner send the betted amount
-        else if (winner == 2) 
+        if (winner == 2) 
             // secondGamerChoice winner send the betted amount
-        else {
+        // else
             // betted amount / 2
-        }
 
         emit LogGameResult(firstGamer, secondGamer, winner);
 
