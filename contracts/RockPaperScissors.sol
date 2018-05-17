@@ -26,6 +26,16 @@ contract RockPaperScissors {
     // ToDo Set the bet logic
     // ToDo At the moment the choice is clear and public so find a way to reduce cheat for the async flow
 
+    modifier isValidChoice(string choice) {
+        require(keccak256(choice) == "rocket" || keccak256(choice) == "paper" || keccak256(choice) == "scissors");
+        _;
+    }
+
+    modifier isRegistered {
+        require(msg.sender == firstGamer || msg.sender == secondGamer);
+        _;
+    }
+
     constructor() public {
         gameCases["rock"]["rock"] = 0;
         gameCases["rock"]["scissors"] = 1;
@@ -61,7 +71,11 @@ contract RockPaperScissors {
     /**
      * @dev play function
     */
-    function play(string choice) public returns(int winner) {
+    function play(string choice) 
+        public
+        isValidChoice(choice)
+        returns(int winner) 
+    {
         // ToDo check choice is in choices
 
         // set choices
