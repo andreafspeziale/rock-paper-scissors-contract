@@ -6,6 +6,17 @@ module.exports = {
       host: 'localhost',
       port: 8545,
       network_id: '*'
+    },
+    develop: {
+      host: 'localhost',
+      port: 9545,
+      network_id: '*'
+    },
+    net42: {
+      host: 'localhost',
+      port: 8545,
+      network_id: '42',
+      gas: 4712388
     }
   }
 };
