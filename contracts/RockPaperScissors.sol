@@ -18,6 +18,7 @@ contract RockPaperScissors {
     uint public timer;
 
     // ToDo Set the bet logic
+    // ToDo Set the timer and kill game logic
 
     // Events
     event LogGamerRegistration(address indexed gamer);
@@ -159,6 +160,7 @@ contract RockPaperScissors {
             winner = gameCases[firstGamerChoice][secondGamerChoice];
             return winner;
         }
+        // ...
     }
 
 }
