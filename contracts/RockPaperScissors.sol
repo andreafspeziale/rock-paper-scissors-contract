@@ -64,6 +64,18 @@ contract RockPaperScissors {
     }
 
     /**
+     * @dev hashMove function
+     * helper function to create an hashed move passing the move and a secret string
+    */
+    function hashMove(string choice, string secret)
+        public
+        pure
+        returns(bytes32 hashedMove)
+    {
+        return keccak256(keccak256(choice), keccak256(secret));
+    }
+
+    /**
      * @dev register function
      * gamer registration function 
     */
@@ -128,17 +140,5 @@ contract RockPaperScissors {
             emit LogGamerShowChoice(secondGamer, choice);
             secondGamerChoice = choice;
         }
-    }
-
-    /**
-     * @dev hashMove function
-     * helper function to create an hashed move passing the move and a secret string
-    */
-    function hashMove(string choice, string secret)
-        public
-        pure
-        returns(bytes32 hashedMove)
-    {
-        return keccak256(keccak256(choice), keccak256(secret));
     }
 }
