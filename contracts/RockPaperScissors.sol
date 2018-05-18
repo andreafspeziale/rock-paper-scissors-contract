@@ -70,6 +70,7 @@ contract RockPaperScissors {
     function hashMove(string choice, string secret)
         public
         pure
+        isValidChoice(choice)
         returns(bytes32 hashedMove)
     {
         return keccak256(keccak256(choice), keccak256(secret));
@@ -128,7 +129,7 @@ contract RockPaperScissors {
         public
         isValidChoice(choice)
         isRegistered
-        returns(bool proved)
+        returns(bool showed)
     {
         // putting in clear first gamer choice
         if(msg.sender == firstGamer && hashMove(choice, secret) == firstGamerHashChoice) {
@@ -140,5 +141,24 @@ contract RockPaperScissors {
             emit LogGamerShowChoice(secondGamer, choice);
             secondGamerChoice = choice;
         }
+        showed = true;
+        return showed;
     }
+
+    /**
+     * @dev getWinner function
+     * check the game winner
+    */
+    function getWinner() 
+        public
+        view 
+        returns(int winner) 
+    {
+        // check both move was showed
+        if(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0) {
+            winner = gameCases[firstGamerChoice][secondGamerChoice];
+            return winner;
+        }
+    }
+
 }
