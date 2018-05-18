@@ -6,12 +6,7 @@ pragma solidity 0.4.23;
 */
 
 contract RockPaperScissors {
-    /**
-     * @dev matrix of game cases
-     * rock vs rock = draw => 0
-     * rock vs scissors = rock => 1
-     * rock vs paper = paper => 2
-    */
+    
     mapping (string => mapping(string => int)) gameCases;
 
     address public firstGamer;
@@ -47,6 +42,13 @@ contract RockPaperScissors {
         _;
     }
 
+
+    /**
+     * @dev matrix of game cases
+     * rock vs rock = draw => 0
+     * rock vs scissors = rock => 1
+     * rock vs paper = paper => 2
+    */
     constructor() public {
         gameCases["rock"]["rock"] = 0;
         gameCases["rock"]["scissors"] = 1;
@@ -86,7 +88,7 @@ contract RockPaperScissors {
      * @dev setChoice function
      * setting the hased gamers choices
     */
-    function setChoice(string choice) 
+    function setChoice(string choice, string secret) 
         public
         isValidChoice(choice)
         isRegistered
@@ -95,10 +97,10 @@ contract RockPaperScissors {
         // set choices
         if(msg.sender == firstGamer) {
             emit LogPlayerChoiceSet(firstGamer);
-            firstGamerHashChoice = keccak256(choice);
+            firstGamerHashChoice = keccak256(keccak256(choice), keccak256(secret));
         } else {
             emit LogPlayerChoiceSet(secondGamer);
-            secondGamerHashChoice = keccak256(choice);
+            secondGamerHashChoice = keccak256(keccak256(choice), keccak256(secret));
         }
         success = true;
         return success;
