@@ -28,7 +28,7 @@ contract RockPaperScissors {
 
     // check that the gamer choice is one of the allowed choices
     modifier isValidChoice(string choice) {
-        require(keccak256(choice) == "rocket" || keccak256(choice) == "paper" || keccak256(choice) == "scissors");
+        require(keccak256(choice) == keccak256("rocket") || keccak256(choice) == keccak256("paper") || keccak256(choice) == keccak256("scissors"));
         _;
     }
 
