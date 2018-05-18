@@ -20,9 +20,11 @@ contract RockPaperScissors {
     // ToDo Set the bet logic
 
     // Events
-    event LogPlayerRegistration(address indexed gamer);
-    event LogPlayerChoiceSet(address indexed gamer);
+    event LogGamerRegistration(address indexed gamer);
+    event LogGamerChoiceSet(address indexed gamer);
+    event LogGamerShowChoice(address indexed gamer, string indexed choice);
     event LogGameResult(address indexed gamer, address indexed secondGamer, int indexed result);
+
 
     // check that the gamer choice is one of the allowed choices
     modifier isValidChoice(string choice) {
@@ -73,12 +75,12 @@ contract RockPaperScissors {
         // set players
         if(firstGamer == 0) {
             firstGamer = msg.sender;
-            emit LogPlayerRegistration(firstGamer);
+            emit LogGamerRegistration(firstGamer);
             success = true;
             return success;
         } else {
             secondGamer = msg.sender;
-            emit LogPlayerRegistration(secondGamer);
+            emit LogGamerRegistration(secondGamer);
             success = true;
             return success;
         }     
@@ -96,11 +98,11 @@ contract RockPaperScissors {
     {
         // set choices
         if(msg.sender == firstGamer) {
-            emit LogPlayerChoiceSet(firstGamer);
-            firstGamerHashChoice = keccak256(keccak256(choice), keccak256(secret));
+            emit LogGamerChoiceSet(firstGamer);
+            firstGamerHashChoice = hashMove(choice, secret);
         } else {
-            emit LogPlayerChoiceSet(secondGamer);
-            secondGamerHashChoice = keccak256(keccak256(choice), keccak256(secret));
+            emit LogGamerChoiceSet(secondGamer);
+            secondGamerHashChoice = hashMove(choice, secret);
         }
         success = true;
         return success;
@@ -108,14 +110,35 @@ contract RockPaperScissors {
 
     /**
      * @dev showChoice function
-     * proof of gamer move
+     * proof of gamer move, putting in clear the gamer choice
     */
-    function showChoice(string choice)
+    function showChoice(string choice, string secret)
         public
         isValidChoice(choice)
         isRegistered
         returns(bool proved)
     {
-        
+        // putting in clear first gamer choice
+        if(msg.sender == firstGamer && hashMove(choice, secret) == firstGamerHashChoice) {
+            emit LogGamerShowChoice(firstGamer, choice);
+            firstGamerChoice = choice;
+        }
+        // putting in clear second gamer choice
+        if(msg.sender == secondGamer && hashMove(choice, secret) == secondGamerHashChoice) {
+            emit LogGamerShowChoice(secondGamer, choice);
+            secondGamerChoice = choice;
+        }
+    }
+
+    /**
+     * @dev hashMove function
+     * helper function to create an hashed move passing the move and a secret string
+    */
+    function hashMove(string choice, string secret)
+        public
+        pure
+        returns(bytes32 hashedMove)
+    {
+        return keccak256(keccak256(choice), keccak256(secret));
     }
 }
