@@ -50,6 +50,11 @@ contract RockPaperScissors {
         _;
     }
 
+    // a user can not submit a new move when a move is revealed
+    modifier areChoicesNotRevealed {
+        require(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0);
+        _;
+    }
     // allow function execution only if the gamer is not already registered
     modifier isNotRegistered {
         require(msg.sender != firstGamer || msg.sender != secondGamer);
