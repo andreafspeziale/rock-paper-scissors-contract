@@ -55,6 +55,11 @@ contract RockPaperScissors {
         require(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0);
         _;
     }
+    // before a gamer reveal a move both hashed moves need to be submitted
+    modifier areHashedChoiceSubmitted {
+        require(firstGamerHashChoice.length != 0 && secondGamerHashChoice.length != 0);
+        _;
+    }
     // allow function execution only if the gamer is not already registered
     modifier isNotRegistered {
         require(msg.sender != firstGamer || msg.sender != secondGamer);
