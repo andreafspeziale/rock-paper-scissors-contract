@@ -194,6 +194,17 @@ contract RockPaperScissors {
         // check both move was showed
         if(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0) {
             winner = gameCases[firstGamerChoice][secondGamerChoice];
+        }
+        else if (now > gameCountdown + 120)
+        {            
+            if (bytes(firstGamerChoice).length != 0)
+                // firstGamer wins
+                winner = 1;
+            else if (bytes(secondGamerChoice).length != 0)
+                // secondGamer wins
+                winner = 2;
+        }
+        emit LogGameResult(firstGamer, secondGamer, winner);
             return winner;
         }
         // ...
