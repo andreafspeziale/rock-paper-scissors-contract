@@ -17,8 +17,10 @@ contract RockPaperScissors {
     bytes32 public secondGamerHashChoice;
     uint public gameCountdown;
 
-    // ToDo Set the bet logic
-    // ToDo Set the timer and kill game logic
+    // ToDo Set the bet logic --> at the moment no bets
+    
+    // ToDo Set the timer and kill game logic --> at the moment the countdown logic 
+    // takes place only when one of the two gamers reveal the move 
 
     // Events
     event LogGamerRegistration(address indexed gamer);
