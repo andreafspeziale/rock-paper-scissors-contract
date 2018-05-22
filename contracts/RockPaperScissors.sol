@@ -55,11 +55,14 @@ contract RockPaperScissors {
         require(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0);
         _;
     }
+
     // before a gamer reveal a move both hashed moves need to be submitted
     modifier areHashedChoiceSubmitted {
         require(firstGamerHashChoice.length != 0 && secondGamerHashChoice.length != 0);
         _;
+
     }
+
     // allow function execution only if the gamer is not already registered
     modifier isNotRegistered {
         require(msg.sender != firstGamer || msg.sender != secondGamer);
@@ -123,21 +126,24 @@ contract RockPaperScissors {
 
     /**
      * @dev setChoice function
-     * setting the hased gamers choices
+     * setting the hashed gamers choices
+     *
+     * it is callable only if the msg.sender is one of the player
+     * and if the choices have not been revealed
     */
-    function setChoice(string choice, string secret) 
+    function setChoice(bytes32 choice)
         public
-        isValidChoice(choice)
-        isRegistered
+        isRegistered // is msg.sender one of the gamers?
+        areChoicesNotRevealed // are choices not revealed?
         returns(bool success)
     {
         // set choices
         if(msg.sender == firstGamer) {
             emit LogGamerChoiceSet(firstGamer);
-            firstGamerHashChoice = hashMove(choice, secret);
+            firstGamerHashChoice = choice;
         } else {
             emit LogGamerChoiceSet(secondGamer);
-            secondGamerHashChoice = hashMove(choice, secret);
+            secondGamerHashChoice = choice;
         }
         success = true;
         return success;
