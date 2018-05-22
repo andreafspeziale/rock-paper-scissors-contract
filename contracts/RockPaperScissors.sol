@@ -15,7 +15,7 @@ contract RockPaperScissors {
     string public secondGamerChoice;
     bytes32 public firstGamerHashChoice;
     bytes32 public secondGamerHashChoice;
-    uint public timer;
+    uint public gameCountdown;
 
     // ToDo Set the bet logic
     // ToDo Set the timer and kill game logic
