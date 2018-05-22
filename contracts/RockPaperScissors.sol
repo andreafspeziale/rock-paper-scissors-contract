@@ -33,7 +33,7 @@ contract RockPaperScissors {
         if(keccak256("rocket", secret) == choice) {
             clearChoice = "rocket";
             return clearChoice;
-    }
+        }
         if(keccak256("paper", secret) == choice) {
             clearChoice = "paper";
             return clearChoice;
@@ -60,7 +60,6 @@ contract RockPaperScissors {
     modifier areHashedChoiceSubmitted {
         require(firstGamerHashChoice.length != 0 && secondGamerHashChoice.length != 0);
         _;
-
     }
 
     // allow function execution only if the gamer is not already registered
@@ -86,19 +85,6 @@ contract RockPaperScissors {
         gameCases["paper"]["rock"] = 1;
         gameCases["paper"]["scissors"] = 2;
         gameCases["paper"]["paper"] = 0;
-    }
-
-    /**
-     * @dev hashMove function
-     * helper function to create an hashed move passing the move and a secret string
-    */
-    function hashMove(string choice, string secret)
-        public
-        pure
-        isValidChoice(choice)
-        returns(bytes32 hashedMove)
-    {
-        return keccak256(keccak256(choice), keccak256(secret));
     }
 
     /**
@@ -205,9 +191,7 @@ contract RockPaperScissors {
                 winner = 2;
         }
         emit LogGameResult(firstGamer, secondGamer, winner);
-            return winner;
-        }
-        // ...
+        return winner;
     }
 
 }
