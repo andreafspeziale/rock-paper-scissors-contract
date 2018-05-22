@@ -27,10 +27,21 @@ contract RockPaperScissors {
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
 
 
-    // check that the gamer choice is one of the allowed choices
-    modifier isValidChoice(string choice) {
-        require(keccak256(choice) == keccak256("rocket") || keccak256(choice) == keccak256("paper") || keccak256(choice) == keccak256("scissors"));
-        _;
+    // check that the gamer choice is one of the allowed choices and return the cleared one
+    function extractValidChoice(bytes32 choice, string secret) internal returns(string clearChoice) {
+        require(keccak256("rocket", secret) == choice || keccak256("paper", secret) == choice || keccak256("scissors", secret) == choice);
+        if(keccak256("rocket", secret) == choice) {
+            clearChoice = "rocket";
+            return clearChoice;
+    }
+        if(keccak256("paper", secret) == choice) {
+            clearChoice = "paper";
+            return clearChoice;
+        }
+        if(keccak256("scissors", secret) == choice) {
+            clearChoice = "scissors";
+            return clearChoice;
+        }
     }
 
     // allow function execution only if the gamer is already registered
