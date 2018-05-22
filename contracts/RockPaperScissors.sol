@@ -23,8 +23,8 @@ contract RockPaperScissors {
     // Events
     event LogGamerRegistration(address indexed gamer);
     event LogGamerChoiceSet(address indexed gamer);
-    event LogGamerShowChoice(address indexed gamer, string indexed choice);
-    event LogGameResult(address indexed gamer, address indexed secondGamer, int indexed result);
+    event LogGamerRevealChoice(address indexed gamer, string indexed choice);
+    event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
 
 
     // check that the gamer choice is one of the allowed choices
