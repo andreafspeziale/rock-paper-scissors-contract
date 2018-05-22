@@ -28,24 +28,6 @@ contract RockPaperScissors {
     event LogGamerRevealChoice(address indexed gamer, string indexed choice);
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
 
-
-    // check that the gamer choice is one of the allowed choices and return the cleared one
-    function extractValidChoice(bytes32 choice, string secret) internal returns(string clearChoice) {
-        require(keccak256("rocket", secret) == choice || keccak256("paper", secret) == choice || keccak256("scissors", secret) == choice);
-        if(keccak256("rocket", secret) == choice) {
-            clearChoice = "rocket";
-            return clearChoice;
-        }
-        if(keccak256("paper", secret) == choice) {
-            clearChoice = "paper";
-            return clearChoice;
-        }
-        if(keccak256("scissors", secret) == choice) {
-            clearChoice = "scissors";
-            return clearChoice;
-        }
-    }
-
     // allow function execution only if the gamer is already registered
     modifier isRegistered {
         require(msg.sender == firstGamer || msg.sender == secondGamer);
@@ -70,7 +52,6 @@ contract RockPaperScissors {
         _;
     }
 
-
     /**
      * @dev matrix of game cases
      * rock vs rock = draw => 0
@@ -87,6 +68,26 @@ contract RockPaperScissors {
         gameCases["paper"]["rock"] = 1;
         gameCases["paper"]["scissors"] = 2;
         gameCases["paper"]["paper"] = 0;
+    }
+
+    /**
+     * @dev internal extractValidChoice function
+     * check if the gamer choice is one of the allowed choices and return the cleared one
+    */
+    function extractValidChoice(bytes32 choice, string secret) internal returns(string clearChoice) {
+        require(keccak256("rocket", secret) == choice || keccak256("paper", secret) == choice || keccak256("scissors", secret) == choice);
+        if(keccak256("rocket", secret) == choice) {
+            clearChoice = "rocket";
+            return clearChoice;
+        }
+        if(keccak256("paper", secret) == choice) {
+            clearChoice = "paper";
+            return clearChoice;
+        }
+        if(keccak256("scissors", secret) == choice) {
+            clearChoice = "scissors";
+            return clearChoice;
+        }
     }
 
     /**
