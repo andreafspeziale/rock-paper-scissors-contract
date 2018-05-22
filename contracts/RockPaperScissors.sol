@@ -150,27 +150,36 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev showChoice function
+     * @dev revealChoice function
      * proof of gamer move, putting in clear the gamer choice
+     *
+     * it is callable only if the msg.sender is one of the player
+     * and if both gamers has already submitted their hasched choices
     */
-    function showChoice(string choice, string secret)
+    function revealChoice(string secret)
         public
-        isValidChoice(choice)
-        isRegistered
-        returns(bool showed)
+        isRegistered // is msg.sender on of the two gamers?
+        areHashedChoiceSubmitted // have both gamers submitted their hashed choice?
+        returns(bool revealed)
     {
+        string memory clearChoice = "";
+        // start choice submission gameCountdown
+        if (bytes(firstGamerChoice).length == 0 && bytes(secondGamerChoice).length == 0)
+            gameCountdown == now;
         // putting in clear first gamer choice
-        if(msg.sender == firstGamer && hashMove(choice, secret) == firstGamerHashChoice) {
-            emit LogGamerShowChoice(firstGamer, choice);
-            firstGamerChoice = choice;
+        if(msg.sender == firstGamer) {
+            clearChoice = extractValidChoice(firstGamerHashChoice, secret);
+            emit LogGamerRevealChoice(firstGamer, clearChoice);
+            firstGamerChoice = clearChoice;
         }
         // putting in clear second gamer choice
-        if(msg.sender == secondGamer && hashMove(choice, secret) == secondGamerHashChoice) {
-            emit LogGamerShowChoice(secondGamer, choice);
-            secondGamerChoice = choice;
+        if(msg.sender == secondGamer) {
+            clearChoice = extractValidChoice(secondGamerHashChoice, secret);
+            emit LogGamerRevealChoice(secondGamer, clearChoice);
+            secondGamerChoice = clearChoice;
         }
-        showed = true;
-        return showed;
+        revealed = true;
+        return revealed;
     }
 
     /**
