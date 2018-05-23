@@ -46,12 +46,6 @@ contract RockPaperScissors {
         _;
     }
 
-    // allow function execution only if the gamer is not already registered
-    modifier isNotRegistered {
-        require(msg.sender != firstGamer || msg.sender != secondGamer);
-        _;
-    }
-
     /**
      * @dev matrix of game cases
      * rock vs rock = draw => 0
@@ -96,21 +90,19 @@ contract RockPaperScissors {
     */
     function register() 
         public
-        isNotRegistered 
         returns(bool success) 
     {
         // set players
         if(firstGamer == 0) {
             firstGamer = msg.sender;
-            emit LogGamerRegistration(firstGamer);
-            success = true;
-            return success;
-        } else {
+        } else if(secondGamer == 0) {
             secondGamer = msg.sender;
-            emit LogGamerRegistration(secondGamer);
-            success = true;
-            return success;
-        }     
+        } else {
+            revert();
+        }
+        emit LogGamerRegistration(secondGamer);
+        success = true;
+        return success;  
     }
 
     /**
