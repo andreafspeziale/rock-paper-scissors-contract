@@ -100,7 +100,7 @@ contract RockPaperScissors {
         } else {
             revert();
         }
-        emit LogGamerRegistration(secondGamer);
+        emit LogGamerRegistration(msg.sender);
         success = true;
         return success;  
     }
