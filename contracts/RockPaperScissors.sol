@@ -145,12 +145,12 @@ contract RockPaperScissors {
             clearChoice = extractValidChoice(firstGamerHashChoice, secret);
             emit LogGamerRevealChoice(firstGamer, clearChoice);
             firstGamerChoice = clearChoice;
-        }
-        // putting in clear second gamer choice
-        if(msg.sender == secondGamer) {
+        } else if(msg.sender == secondGamer) {
             clearChoice = extractValidChoice(secondGamerHashChoice, secret);
             emit LogGamerRevealChoice(secondGamer, clearChoice);
             secondGamerChoice = clearChoice;
+        } else {
+            revert();
         }
         revealed = true;
         return revealed;
