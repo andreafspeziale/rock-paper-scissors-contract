@@ -34,12 +34,6 @@ contract RockPaperScissors {
         _;
     }
 
-    // a user can not submit a new move when a move is revealed
-    modifier areChoicesNotRevealed {
-        require(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0);
-        _;
-    }
-
     // before a gamer reveal a move both hashed moves need to be submitted
     modifier areHashedChoiceSubmitted {
         require(firstGamerHashChoice.length != 0 && secondGamerHashChoice.length != 0);
@@ -115,11 +109,10 @@ contract RockPaperScissors {
     function setChoice(bytes32 choice)
         public
         isRegistered // is msg.sender one of the gamers?
-        areChoicesNotRevealed // are choices not revealed?
         returns(bool success)
     {
         // set choices
-        if(msg.sender == firstGamer) {
+        if(msg.sender == firstGamer && firstGamerHashChoice == 0) {
             emit LogGamerChoiceSet(firstGamer);
             firstGamerHashChoice = choice;
         } else {
