@@ -115,6 +115,8 @@ contract RockPaperScissors {
             firstGamerHashChoice = choice;
         } else if(msg.sender == secondGamer && secondGamerHashChoice == 0) {
             secondGamerHashChoice = choice;
+        } else {
+            revert();
         }
         emit LogGamerChoiceSet(msg.sender);
         success = true;
