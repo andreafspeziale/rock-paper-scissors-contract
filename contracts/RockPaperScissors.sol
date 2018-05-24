@@ -53,26 +53,6 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev internal extractValidChoice function
-     * check if the gamer choice is one of the allowed choices and return the cleared one
-    */
-    function extractValidChoice(bytes32 choice, string secret) internal returns(string clearChoice) {
-        require(keccak256("rocket", secret) == choice || keccak256("paper", secret) == choice || keccak256("scissors", secret) == choice);
-        if(keccak256("rocket", secret) == choice) {
-            clearChoice = "rocket";
-            return clearChoice;
-        }
-        if(keccak256("paper", secret) == choice) {
-            clearChoice = "paper";
-            return clearChoice;
-        }
-        if(keccak256("scissors", secret) == choice) {
-            clearChoice = "scissors";
-            return clearChoice;
-        }
-    }
-
-    /**
      * @dev register function
      * gamer registration function 
     */
@@ -142,7 +122,6 @@ contract RockPaperScissors {
     */
     function getWinner() 
         public
-        view 
         returns(int winner) 
     {
         // check both move was showed
