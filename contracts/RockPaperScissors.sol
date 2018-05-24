@@ -28,12 +28,6 @@ contract RockPaperScissors {
     event LogGamerRevealChoice(address indexed gamer, string indexed choice);
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
 
-    // allow function execution only if the gamer is already registered
-    modifier isRegistered {
-        require(msg.sender == firstGamer || msg.sender == secondGamer);
-        _;
-    }
-
     // before a gamer reveal a move both hashed moves need to be submitted
     modifier areHashedChoiceSubmitted {
         require(firstGamerHashChoice.length != 0 && secondGamerHashChoice.length != 0);
@@ -132,7 +126,6 @@ contract RockPaperScissors {
     */
     function revealChoice(string secret)
         public
-        isRegistered // is msg.sender on of the two gamers?
         areHashedChoiceSubmitted // have both gamers submitted their hashed choice?
         returns(bool revealed)
     {
