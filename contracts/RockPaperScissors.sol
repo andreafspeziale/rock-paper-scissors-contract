@@ -108,17 +108,15 @@ contract RockPaperScissors {
     */
     function setChoice(bytes32 choice)
         public
-        isRegistered // is msg.sender one of the gamers?
         returns(bool success)
     {
         // set choices
         if(msg.sender == firstGamer && firstGamerHashChoice == 0) {
-            emit LogGamerChoiceSet(firstGamer);
             firstGamerHashChoice = choice;
-        } else {
-            emit LogGamerChoiceSet(secondGamer);
+        } else if(msg.sender == secondGamer && secondGamerHashChoice == 0) {
             secondGamerHashChoice = choice;
         }
+        emit LogGamerChoiceSet(msg.sender);
         success = true;
         return success;
     }
