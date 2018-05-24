@@ -24,7 +24,7 @@ contract RockPaperScissors {
 
     // Events
     event LogGamerRegistration(address indexed gamer);
-    event LogGamerChoiceSet(address indexed gamer);
+    event LogGamerChoiceSet(address indexed gamer, bytes32 indexed hashedChoice);
     event LogGamerRevealChoice(address indexed gamer, string indexed choice);
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
 
@@ -96,23 +96,20 @@ contract RockPaperScissors {
     /**
      * @dev setChoice function
      * setting the hashed gamers choices
-     *
-     * it is callable only if the msg.sender is one of the player
-     * and if the choices have not been revealed
     */
-    function setChoice(bytes32 choice)
+    function setChoice(bytes32 hashedChoice)
         public
         returns(bool success)
     {
-        // set choices
-        if(msg.sender == firstGamer && firstGamerHashChoice == 0) {
-            firstGamerHashChoice = choice;
-        } else if(msg.sender == secondGamer && secondGamerHashChoice == 0) {
-            secondGamerHashChoice = choice;
+        // set hashedChoice
+        if(msg.sender == firstGamer && firstGamerHashChoice == 0) { // so hashedChoice can be setted once
+            firstGamerHashChoice = hashedChoice;
+        } else if(msg.sender == secondGamer && secondGamerHashChoice == 0) { // so hashedChoice can be setted once
+            secondGamerHashChoice = hashedChoice;
         } else {
             revert();
         }
-        emit LogGamerChoiceSet(msg.sender);
+        emit LogGamerChoiceSet(msg.sender, hashedChoice);
         success = true;
         return success;
     }
@@ -120,31 +117,21 @@ contract RockPaperScissors {
     /**
      * @dev revealChoice function
      * proof of gamer move, putting in clear the gamer choice
-     *
-     * it is callable only if the msg.sender is one of the player
-     * and if both gamers has already submitted their hasched choices
     */
-    function revealChoice(string secret)
+    function revealChoice(string clearChoice, string secret)
         public
-        areHashedChoiceSubmitted // have both gamers submitted their hashed choice?
         returns(bool revealed)
     {
-        string memory clearChoice = "";
-        // start choice submission gameCountdown
         if (bytes(firstGamerChoice).length == 0 && bytes(secondGamerChoice).length == 0)
             gameCountdown == now;
-        // putting in clear first gamer choice
-        if(msg.sender == firstGamer) {
-            clearChoice = extractValidChoice(firstGamerHashChoice, secret);
-            emit LogGamerRevealChoice(firstGamer, clearChoice);
+        
+        if (keccak256(clearChoice, secret) == firstGamerHashChoice) {
             firstGamerChoice = clearChoice;
-        } else if(msg.sender == secondGamer) {
-            clearChoice = extractValidChoice(secondGamerHashChoice, secret);
-            emit LogGamerRevealChoice(secondGamer, clearChoice);
+        } else if (keccak256(clearChoice, secret) == secondGamerHashChoice) {
             secondGamerChoice = clearChoice;
-        } else {
-            revert();
-        }
+        } else revert();
+        
+        emit LogGamerRevealChoice(secondGamer, clearChoice);
         revealed = true;
         return revealed;
     }
