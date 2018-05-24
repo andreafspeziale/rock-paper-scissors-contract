@@ -100,10 +100,12 @@ contract RockPaperScissors {
     */
     function revealChoice(string clearChoice, string secret)
         public
+        areHashedChoiceSubmitted // don't let the gamers reveal their move before both move are submitted
         returns(bool revealed)
     {
+        // test if firstGamerChoice == 0 works
         if (bytes(firstGamerChoice).length == 0 && bytes(secondGamerChoice).length == 0)
-            gameCountdown == now;
+            gameCountdown == block.number;
         
         if (keccak256(clearChoice, secret) == firstGamerHashChoice) {
             firstGamerChoice = clearChoice;
@@ -128,7 +130,7 @@ contract RockPaperScissors {
         if(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0) {
             winner = gameCases[firstGamerChoice][secondGamerChoice];
         }
-        else if (now > gameCountdown + 120)
+        else if (block.number > gameCountdown + 1)
         {            
             if (bytes(firstGamerChoice).length != 0)
                 // firstGamer wins
