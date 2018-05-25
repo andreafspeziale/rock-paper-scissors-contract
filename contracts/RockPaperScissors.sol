@@ -24,9 +24,11 @@ contract RockPaperScissors {
      * Describing the game lifecycle
     */
     event LogGamerRegistration(address indexed gamer);
-    event LogGamerChoiceSet(address indexed gamer, bytes32 indexed hashedChoice);
-    event LogGamerRevealChoice(address indexed gamer, string indexed choice);
+    event LogGamerHashedChoiceSet(address indexed gamer, bytes32 indexed hashedChoice);
+    event LogGamerRevealChoice(address indexed gamer, string indexed clearChoice);
+    event LogNotValidChoice(address indexed gamer, string clearChoice);
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
+    event LogResetGame();
 
     /**
      * @dev areHashedChoiceSubmitted
@@ -117,9 +119,8 @@ contract RockPaperScissors {
         } else {
             revert();
         }
-        emit LogGamerChoiceSet(msg.sender, hashedChoice);
-        success = true;
-        return success;
+        emit LogGamerHashedChoiceSet(msg.sender, hashedChoice);
+        return true;
     }
 
     /**
