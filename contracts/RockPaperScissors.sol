@@ -3,6 +3,8 @@ pragma solidity 0.4.23;
 /**
  * @title RockPaperScissors
  * @dev Basic implementation of the RockPaperScissors in solidity
+ *
+ * ToDos Develop the bet logic
 */
 
 contract RockPaperScissors {
@@ -17,25 +19,51 @@ contract RockPaperScissors {
     bytes32 public secondGamerHashChoice;
     uint public gameCountdown;
 
-    // ToDo Set the bet logic --> at the moment no bets
-    
-    // ToDo Set the timer and kill game logic --> at the moment the countdown logic 
-    // takes place only when one of the two gamers reveal the move 
-
-    // Events
+    /**
+     * @dev Events
+     * Describing the game lifecycle
+    */
     event LogGamerRegistration(address indexed gamer);
     event LogGamerChoiceSet(address indexed gamer, bytes32 indexed hashedChoice);
     event LogGamerRevealChoice(address indexed gamer, string indexed choice);
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
 
-    // before a gamer reveal a move both hashed moves need to be submitted
+    /**
+     * @dev areHashedChoiceSubmitted
+     * Check if both gamers has submitted the hashedChoice
+    */
     modifier areHashedChoiceSubmitted {
         require(firstGamerHashChoice.length != 0 && secondGamerHashChoice.length != 0);
         _;
     }
 
     /**
-     * @dev matrix of game cases
+     * @dev isValidChoice
+     * Internal helper function to determine if a submitted hashedChoice is a valid move
+    */
+    function isValidChoice(string clearChoice, address gamer) internal pure returns(bool success) {
+        if(keccak256(clearChoice) == keccak256("rock") || keccak256(clearChoice) == keccak256("paper") || keccak256(clearChoice) == keccak256("scissors"))
+            return true;
+        else
+            return false;
+    }
+
+    /**
+     * @dev resetGame
+     * Internal function to reset the entire game
+    */
+    function resetGame() internal returns(bool success) {
+        emit LogResetGame();
+        firstGamerChoice = "";
+        secondGamerChoice = "";
+        firstGamerHashChoice = 0;
+        secondGamerHashChoice = 0;
+        gameCountdown= 0;
+        return true;
+    }
+
+    /**
+     * @dev Matrix of game cases
      * rock vs rock = draw => 0
      * rock vs scissors = rock => 1
      * rock vs paper = paper => 2
@@ -53,8 +81,8 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev register function
-     * gamer registration function 
+     * @dev register
+     * Gamer registration function
     */
     function register() 
         public
@@ -74,17 +102,17 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev setChoice function
-     * setting the hashed gamers choices
+     * @dev setChoice
+     * Setting the hashed gamers choices
     */
     function setChoice(bytes32 hashedChoice)
         public
         returns(bool success)
     {
-        // set hashedChoice
-        if(msg.sender == firstGamer && firstGamerHashChoice == 0) { // so hashedChoice can be setted once
+        
+        if(msg.sender == firstGamer && firstGamerHashChoice == 0) {
             firstGamerHashChoice = hashedChoice;
-        } else if(msg.sender == secondGamer && secondGamerHashChoice == 0) { // so hashedChoice can be setted once
+        } else if(msg.sender == secondGamer && secondGamerHashChoice == 0) {
             secondGamerHashChoice = hashedChoice;
         } else {
             revert();
@@ -95,15 +123,15 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev revealChoice function
-     * proof of gamer move, putting in clear the gamer choice
+     * @dev revealChoice
+     * Proof of gamer move, setting the clearChoice
     */
     function revealChoice(string clearChoice, string secret)
         public
-        areHashedChoiceSubmitted // don't let the gamers reveal their move before both move are submitted
+        areHashedChoiceSubmitted
         returns(bool revealed)
     {
-        // test if firstGamerChoice == 0 works
+        
         if (bytes(firstGamerChoice).length == 0 && bytes(secondGamerChoice).length == 0)
             gameCountdown == block.number;
         
@@ -119,8 +147,8 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev getWinner function
-     * check the game winner
+     * @dev getWinner
+     * Check the game winner
     */
     function getWinner() 
         public
