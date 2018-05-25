@@ -81,7 +81,7 @@ contract RockPaperScissors {
         gameCases["paper"]["scissors"] = 2;
         gameCases["paper"]["paper"] = 0;
     }
-
+    
     /**
      * @dev register
      * Gamer registration function
@@ -142,9 +142,14 @@ contract RockPaperScissors {
             secondGamerChoice = clearChoice;
         } else revert();
         
+        if(!isValidChoice(clearChoice, msg.sender)) {
+            emit LogNotValidChoice(msg.sender, clearChoice);
+            resetGame();
+            return false;
+        }
+
         emit LogGamerRevealChoice(secondGamer, clearChoice);
-        revealed = true;
-        return revealed;
+        return true;
     }
 
     /**
@@ -169,7 +174,7 @@ contract RockPaperScissors {
                 winner = 2;
         }
         emit LogGameResult(firstGamer, secondGamer, winner);
+        resetGame();
         return winner;
     }
-
 }
