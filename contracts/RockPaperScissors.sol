@@ -147,7 +147,7 @@ contract RockPaperScissors {
             revert();
         }
         
-        if(!isValidChoice(clearChoice, msg.sender)) {
+        if(!isValidChoice(clearChoice)) {
             emit LogNotValidChoice(msg.sender, clearChoice);
             resetGame(msg.sender);
             return false;
