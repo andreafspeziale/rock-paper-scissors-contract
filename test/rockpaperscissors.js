@@ -78,4 +78,40 @@ contract('RockPaperScissors', (accounts)=> {
         })
 
     })
+
+    describe('Check if valid choice stuff:', async () => {
+
+        it('should see a valid choice', async () => {
+            
+            const rock = web3.sha3("rock")
+            const paper = web3.sha3("paper")
+            const scissors = web3.sha3("scissors")
+
+            let isValidChoice = await contract.isValidChoice.call(rock)
+            expect(isValidChoice).to.equal(true)
+
+            isValidChoice = await contract.isValidChoice.call(paper)
+            expect(isValidChoice).to.equal(true)
+
+            isValidChoice = await contract.isValidChoice.call(scissors)
+            expect(isValidChoice).to.equal(true)
+        })
+
+        it('should see a crash since is not a valid choice', async () => {
+            
+            const rock = web3.sha3("Rock")
+            const paper = web3.sha3("pop")
+            const scissors = web3.sha3("scissor")
+
+            let isValidChoice = await contract.isValidChoice.call(rock)
+            expect(isValidChoice).to.equal(false)
+
+            isValidChoice = await contract.isValidChoice.call(paper)
+            expect(isValidChoice).to.equal(false)
+
+            isValidChoice = await contract.isValidChoice.call(scissors)
+            expect(isValidChoice).to.equal(false)
+        })
+
+    })
 })
