@@ -43,7 +43,7 @@ contract('RockPaperScissors', (accounts)=> {
 
         it('should log a register event', async () => {
             const playerTx = await contract.register({from: firstGamer})
-            const event = expectEvent(playerTx, 'LogPlayerRegistration')
+            const event = expectEvent(playerTx, 'LogGamerRegistration')
             expect(event.args.gamer).to.equal(firstGamer)
         })
 
