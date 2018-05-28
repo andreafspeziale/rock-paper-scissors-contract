@@ -13,10 +13,10 @@ contract RockPaperScissors {
 
     address public firstGamer;
     address public secondGamer;
-    string public firstGamerChoice;
-    string public secondGamerChoice;
     bytes32 public firstGamerHashChoice;
     bytes32 public secondGamerHashChoice;
+    string public firstGamerChoice;
+    string public secondGamerChoice;
     uint public gameCountdown;
 
     /**
