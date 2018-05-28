@@ -81,7 +81,7 @@ contract('RockPaperScissors', (accounts)=> {
 
     describe('Check if valid choice stuff:', async () => {
 
-        it('should see a valid choice', async () => {
+        it('should see a valid choice returning true', async () => {
             
             const rock = web3.sha3("rock")
             const paper = web3.sha3("paper")
@@ -97,7 +97,7 @@ contract('RockPaperScissors', (accounts)=> {
             expect(isValidChoice).to.equal(true)
         })
 
-        it('should see a crash since is not a valid choice', async () => {
+        it('should see not a valid choice returning false', async () => {
             
             const rock = web3.sha3("Rock")
             const paper = web3.sha3("pop")
