@@ -67,8 +67,8 @@ contract RockPaperScissors {
     /**
      * @dev Matrix of game cases
      * rock vs rock = draw => 0
-     * rock vs scissors = rock => 1
-     * rock vs paper = paper => 2
+     * rock vs scissors = firstGamer won the game => 1
+     * rock vs paper = secondGamer won the game => 2
     */
     constructor() public {
         gameCases["rock"]["rock"] = 0;
