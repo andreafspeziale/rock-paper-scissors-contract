@@ -40,10 +40,28 @@ contract RockPaperScissors {
     }
 
     /**
+     * @dev Matrix of game cases
+     * rock vs rock = draw => 0
+     * rock vs scissors = firstGamer won the game => 1
+     * rock vs paper = secondGamer won the game => 2
+    */
+    constructor() public {
+        gameCases["rock"]["rock"] = 0;
+        gameCases["rock"]["scissors"] = 1;
+        gameCases["rock"]["paper"] = 2;
+        gameCases["scissors"]["rock"] = 2;
+        gameCases["scissors"]["scissors"] = 0;
+        gameCases["scissors"]["paper"] = 1;
+        gameCases["paper"]["rock"] = 1;
+        gameCases["paper"]["scissors"] = 2;
+        gameCases["paper"]["paper"] = 0;
+    }
+
+    /**
      * @dev isValidChoice
      * Internal helper function to determine if a submitted hashedChoice is a valid move
     */
-    function isValidChoice(string clearChoice, address gamer) internal pure returns(bool success) {
+    function isValidChoice(string clearChoice, address gamer) public pure returns(bool success) {
         if(keccak256(clearChoice) == keccak256("rock") || keccak256(clearChoice) == keccak256("paper") || keccak256(clearChoice) == keccak256("scissors"))
             return true;
         else
@@ -62,24 +80,6 @@ contract RockPaperScissors {
         secondGamerHashChoice = 0;
         gameCountdown= 0;
         return true;
-    }
-
-    /**
-     * @dev Matrix of game cases
-     * rock vs rock = draw => 0
-     * rock vs scissors = firstGamer won the game => 1
-     * rock vs paper = secondGamer won the game => 2
-    */
-    constructor() public {
-        gameCases["rock"]["rock"] = 0;
-        gameCases["rock"]["scissors"] = 1;
-        gameCases["rock"]["paper"] = 2;
-        gameCases["scissors"]["rock"] = 2;
-        gameCases["scissors"]["scissors"] = 0;
-        gameCases["scissors"]["paper"] = 1;
-        gameCases["paper"]["rock"] = 1;
-        gameCases["paper"]["scissors"] = 2;
-        gameCases["paper"]["paper"] = 0;
     }
     
     /**
