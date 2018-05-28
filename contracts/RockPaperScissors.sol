@@ -9,14 +9,17 @@ pragma solidity 0.4.23;
 
 contract RockPaperScissors {
     
-    mapping (string => mapping(string => int)) gameCases;
+    mapping (bytes32 => mapping(bytes32 => int)) gameCases;
 
     address public firstGamer;
     address public secondGamer;
     bytes32 public firstGamerHashChoice;
     bytes32 public secondGamerHashChoice;
-    string public firstGamerChoice;
-    string public secondGamerChoice;
+    bytes32 public firstGamerChoice;
+    bytes32 public secondGamerChoice;
+    bytes32 public rock = 0x10977e4d68108d418408bc9310b60fc6d0a750c63ccef42cfb0ead23ab73d102;
+    bytes32 public paper = 0xea923ca2cdda6b54f4fb2bf6a063e5a59a6369ca4c4ae2c4ce02a147b3036a21;
+    bytes32 public scissors = 0x389a2d4e358d901bfdf22245f32b4b0a401cc16a4b92155a2ee5da98273dad9a;
     uint public gameCountdown;
 
     /**
@@ -25,8 +28,8 @@ contract RockPaperScissors {
     */
     event LogGamerRegistration(address indexed gamer);
     event LogGamerHashedChoiceSet(address indexed gamer, bytes32 indexed hashedChoice);
-    event LogGamerRevealChoice(address indexed gamer, string indexed clearChoice);
-    event LogNotValidChoice(address indexed gamer, string clearChoice);
+    event LogGamerRevealChoice(address indexed gamer, bytes32 indexed clearChoice);
+    event LogNotValidChoice(address indexed gamer, bytes32 clearChoice);
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
     event LogResetGame(address indexed raiser);
 
@@ -46,23 +49,23 @@ contract RockPaperScissors {
      * rock vs paper = secondGamer won the game => 2
     */
     constructor() public {
-        gameCases["rock"]["rock"] = 0;
-        gameCases["rock"]["scissors"] = 1;
-        gameCases["rock"]["paper"] = 2;
-        gameCases["scissors"]["rock"] = 2;
-        gameCases["scissors"]["scissors"] = 0;
-        gameCases["scissors"]["paper"] = 1;
-        gameCases["paper"]["rock"] = 1;
-        gameCases["paper"]["scissors"] = 2;
-        gameCases["paper"]["paper"] = 0;
+        gameCases[rock][rock] = 0;
+        gameCases[rock][scissors] = 1;
+        gameCases[rock][paper] = 2;
+        gameCases[scissors][rock] = 2;
+        gameCases[scissors][scissors] = 0;
+        gameCases[scissors][paper] = 1;
+        gameCases[paper][rock] = 1;
+        gameCases[paper][scissors] = 2;
+        gameCases[paper][paper] = 0;
     }
 
     /**
      * @dev isValidChoice
      * Internal helper function to determine if a submitted hashedChoice is a valid move
     */
-    function isValidChoice(string clearChoice, address gamer) public pure returns(bool success) {
-        if(keccak256(clearChoice) == keccak256("rock") || keccak256(clearChoice) == keccak256("paper") || keccak256(clearChoice) == keccak256("scissors"))
+    function isValidChoice(bytes32 clearChoice) public view returns(bool success) {
+        if(clearChoice == rock || clearChoice == paper || clearChoice == scissors)
             return true;
         else
             return false;
@@ -74,8 +77,8 @@ contract RockPaperScissors {
     */
     function resetGame(address raiser) internal returns(bool success) {
         emit LogResetGame(raiser);
-        firstGamerChoice = "";
-        secondGamerChoice = "";
+        firstGamerChoice = 0;
+        secondGamerChoice = 0;
         firstGamerHashChoice = 0;
         secondGamerHashChoice = 0;
         gameCountdown= 0;
@@ -127,13 +130,13 @@ contract RockPaperScissors {
      * @dev revealChoice
      * Proof of gamer move, setting the clearChoice
     */
-    function revealChoice(string clearChoice, string secret)
+    function revealChoice(bytes32 clearChoice, bytes32 secret)
         public
         areHashedChoiceSubmitted
         returns(bool revealed)
     {
         
-        if (bytes(firstGamerChoice).length == 0 && bytes(secondGamerChoice).length == 0)
+        if (firstGamerChoice == 0 && secondGamerChoice == 0)
             gameCountdown == block.number;
         
         if (keccak256(clearChoice, secret) == firstGamerHashChoice) {
@@ -161,15 +164,15 @@ contract RockPaperScissors {
         returns(int winner) 
     {
         // check both move was showed
-        if(bytes(firstGamerChoice).length != 0 && bytes(secondGamerChoice).length != 0) {
+        if(firstGamerChoice != 0 && secondGamerChoice != 0) {
             winner = gameCases[firstGamerChoice][secondGamerChoice];
         }
         else if (block.number > gameCountdown + 1)
         {            
-            if (bytes(firstGamerChoice).length != 0)
+            if (firstGamerChoice != 0)
                 // firstGamer wins
                 winner = 1;
-            else if (bytes(secondGamerChoice).length != 0)
+            else if (secondGamerChoice != 0)
                 // secondGamer wins
                 winner = 2;
         }
