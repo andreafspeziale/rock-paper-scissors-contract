@@ -107,10 +107,10 @@ contract RockPaperScissors {
     }
 
     /**
-     * @dev setChoice
+     * @dev setHashedChoice
      * Setting the hashed gamers choices
     */
-    function setChoice(bytes32 hashedChoice)
+    function setHashedChoice(bytes32 hashedChoice)
         public
         returns(bool success)
     {
@@ -143,7 +143,9 @@ contract RockPaperScissors {
             firstGamerChoice = clearChoice;
         } else if (keccak256(clearChoice, secret) == secondGamerHashChoice) {
             secondGamerChoice = clearChoice;
-        } else revert();
+        } else {
+            revert();
+        }
         
         if(!isValidChoice(clearChoice, msg.sender)) {
             emit LogNotValidChoice(msg.sender, clearChoice);
