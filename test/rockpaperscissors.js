@@ -19,6 +19,26 @@ contract('RockPaperScissors', (accounts)=> {
         contract = await RPS.new()
     })
 
+    describe('GameCases stuff:', async () => {
+
+        it('should see same hash for game move choices', async () => {
+            
+            const rock = web3.sha3("rock")
+            const paper = web3.sha3("paper")
+            const scissors = web3.sha3("scissors")
+
+            const contractHashRock = await contract.rock.call()
+            const contractHashPaper = await contract.paper.call()
+            const contractHashScissors = await contract.scissors.call()
+
+            expect(rock).to.equal(contractHashRock)
+            expect(paper).to.equal(contractHashPaper)
+            expect(scissors).to.equal(contractHashScissors)
+
+        })
+
+    })
+
     describe('Register a player stuff:', async () => {
 
         it('should set msg.sender as gamer1', async () => {
