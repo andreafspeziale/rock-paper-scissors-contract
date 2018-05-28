@@ -28,7 +28,7 @@ contract RockPaperScissors {
     event LogGamerRevealChoice(address indexed gamer, string indexed clearChoice);
     event LogNotValidChoice(address indexed gamer, string clearChoice);
     event LogGameResult(address indexed firstGamer, address indexed secondGamer, int indexed result);
-    event LogResetGame();
+    event LogResetGame(address indexed raiser);
 
     /**
      * @dev areHashedChoiceSubmitted
@@ -54,8 +54,8 @@ contract RockPaperScissors {
      * @dev resetGame
      * Internal function to reset the entire game
     */
-    function resetGame() internal returns(bool success) {
-        emit LogResetGame();
+    function resetGame(address raiser) internal returns(bool success) {
+        emit LogResetGame(raiser);
         firstGamerChoice = "";
         secondGamerChoice = "";
         firstGamerHashChoice = 0;
@@ -144,7 +144,7 @@ contract RockPaperScissors {
         
         if(!isValidChoice(clearChoice, msg.sender)) {
             emit LogNotValidChoice(msg.sender, clearChoice);
-            resetGame();
+            resetGame(msg.sender);
             return false;
         }
 
@@ -174,7 +174,7 @@ contract RockPaperScissors {
                 winner = 2;
         }
         emit LogGameResult(firstGamer, secondGamer, winner);
-        resetGame();
+        resetGame(address(this));
         return winner;
     }
 }
