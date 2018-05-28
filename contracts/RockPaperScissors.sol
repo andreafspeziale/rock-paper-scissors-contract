@@ -169,15 +169,19 @@ contract RockPaperScissors {
         if(firstGamerChoice != 0 && secondGamerChoice != 0) {
             winner = gameCases[firstGamerChoice][secondGamerChoice];
         }
-        else if (block.number > gameCountdown + 1)
+        else if(block.number > gameCountdown + 1)
         {            
-            if (firstGamerChoice != 0)
+            if (firstGamerChoice != 0) {
                 // firstGamer wins
                 winner = 1;
-            else if (secondGamerChoice != 0)
+            }
+            else if(secondGamerChoice != 0) {
                 // secondGamer wins
                 winner = 2;
-        }
+            }
+        } else {
+            revert();
+        }   
         emit LogGameResult(firstGamer, secondGamer, winner);
         resetGame(address(this));
         return winner;
